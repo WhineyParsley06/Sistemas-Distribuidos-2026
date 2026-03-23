@@ -6,6 +6,8 @@ from typing import Dict
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 
 HOST = os.getenv("CHAT_HOST", "0.0.0.0")
 PORT = int(os.getenv("CHAT_PORT", "8000"))
@@ -190,6 +192,22 @@ async def websocket_endpoint(websocket: WebSocket, username: str = "Usuario") ->
             pass
     finally:
         await manager.disconnect(websocket)
+
+
+# Servir archivos estáticos del frontend
+frontend_dist = os.path.join(os.path.dirname(__file__), "frontend", "dist")
+
+if os.path.exists(frontend_dist):
+    # Ruta raíz
+    @app.get("/")
+    async def root():
+        return FileResponse(os.path.join(frontend_dist, "index.html"))
+    
+    # Montar carpeta de assets
+    app.mount("/assets", StaticFiles(directory=os.path.join(frontend_dist, "assets")), name="assets")
+    
+    # Montar raíz como archivos estáticos
+    app.mount("/", StaticFiles(directory=frontend_dist, html=True), name="static")
 
 
 if __name__ == "__main__":

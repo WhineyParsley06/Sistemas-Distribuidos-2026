@@ -1,0 +1,8 @@
+run = "cd frontend && npm install && npm run build && cd .. && python -m uvicorn ws_server:app --host 0.0.0.0 --port 8000"
+
+entrypoint = "ws_server.py"
+
+modules = ["python-3.10", "nodejs"]
+
+[nix]
+channel = "stable-23_11"
