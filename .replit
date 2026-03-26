@@ -1,4 +1,4 @@
-run = "bash -c 'cd frontend && npm install --legacy-peer-deps && npm run build && cd .. && python -m pip install -r requirements.txt && python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000'"
+run = "bash -c 'cd frontend && npm install --legacy-peer-deps && npm run build && cd .. && python -m pip install -r requirements.txt && python -m uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-8000}'"
 
 entrypoint = "backend/main.py"
 

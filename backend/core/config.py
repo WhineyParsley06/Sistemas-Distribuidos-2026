@@ -8,7 +8,7 @@ import os
 @dataclass(frozen=True)
 class Settings:
     host: str = os.getenv("CHAT_HOST", "0.0.0.0")
-    port: int = int(os.getenv("CHAT_PORT", "8000"))
+    port: int = int(os.getenv("PORT", os.getenv("CHAT_PORT", "8000")))
     transport_mode: str = "p2p"
 
 
