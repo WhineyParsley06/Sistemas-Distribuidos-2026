@@ -1,8 +1,35 @@
 run = "bash -c 'cd frontend && npm install --legacy-peer-deps && npm run build && cd .. && python -m pip install -r requirements.txt && python -m uvicorn backend.main:app --host 0.0.0.0 --port ${PORT:-8000}'"
 
 entrypoint = "backend/main.py"
-
-modules = ["python-3.10", "nodejs"]
+modules = ["python-3.10", "nodejs", "nodejs-20"]
 
 [nix]
 channel = "stable-23_11"
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Start application"
+
+[[workflows.workflow]]
+name = "Start application"
+author = "agent"
+
+[workflows.workflow.metadata]
+outputType = "webview"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "bash -c 'cd frontend && npm install --legacy-peer-deps && npm run build && cd .. && python -m uvicorn backend.main:app --host 0.0.0.0 --port 5000'"
+waitForPort = 5000
+
+[[ports]]
+localPort = 5000
+externalPort = 80
